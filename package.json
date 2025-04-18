@@ -2,10 +2,10 @@
     "name": "ai-chatbot",
     "version": "1.0.0",
     "description": "A chatbot that speaks Moroccan Darija, French, and MSA with image support",
-    "main": "server.js",
+    "main": "app.js",
     "scripts": {
-      "start": "node server.js",
-      "dev": "nodemon server.js"
+      "start": "node app.js",
+      "dev": "nodemon app.js"
     },
     "dependencies": {
       "@google/generative-ai": "^0.2.1",

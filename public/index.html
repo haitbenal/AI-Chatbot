@@ -1,90 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Moroccan Darija Chatbot</title>
-  <link rel="stylesheet" href="./style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <title>SpakAI 🇲🇦</title>
+    <link rel="stylesheet" href="./app.css">
 </head>
 <body>
-  <main class="container">
-    <div class="chat-container">
-      <h1 class="title">
-        <span class="title-highlight">Darija</span> Chatbot
-      </h1>
-      
-      <div class="chat-interface">
-        <div class="chat-header">
-          <div class="chat-header-left">
-            <div class="avatar">
-              <div class="avatar-fallback">🇲🇦</div>
-            </div>
-            <span class="bot-name">Darija Assistant</span>
-          </div>
-          
-          <div class="header-actions">
-            <button id="clear-chat" class="clear-button" title="Clear chat history">
-              <i data-lucide="trash-2"></i>
-            </button>
-            <div class="language-selector">
-              <select id="language-select">
-                <option value="darija">Darija</option>
-                <option value="french">Français</option>
-                <option value="msa">العربية الفصحى</option>
-              </select>
-              <i data-lucide="languages"></i>
-            </div>
-          </div>
+    <nav class="navbar">
+        <div class="logo">
+          <a href="index.html">
+            <span class="logo-icon"><i class="fa-solid fa-robot"></i></span>
+            <span class="logo-text">SpakAI</span>
+          </a>
         </div>
-        
-        <div class="chat-messages" id="chat-messages">
-          <div class="welcome-message" id="welcome-message">
-            <div class="welcome-emoji">🇲🇦</div>
-            <p class="welcome-text">Salam! Ana hna bash n3awnk.</p>
-            <p class="welcome-subtext">I'm here to help you in Darija, French, or MSA.</p>
+        <div class="menu-toggle" id="menu-toggle">
+          <i class="fas fa-bars"></i>
+        </div>
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="#features">features</a></li>
+          <li><a href="#prices">Pricing</a></li>
+          <li><a href="#about">About Us</a></li>
+          <li class="nav-cta"><a href="#login" class="btn btn-outline">Try For Free</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <div class="left-text">
+                <h1>Whatever you want to ask, our chat has the answers</h1>
+                <p>Super is an Al-Powered chatbot app that allows user to have conversations with virtual assitant.</p>
+                <button>Get Started</button>
+            </div>
+            <div class="hero-image">
+                <img src="./img/hero.png" alt="" srcset="">
+            </div>
+        </section>
+        <section class="features" id="features">
+          <h4>Features</h4>
+          <h1>Revolutionize Your Workflow</h1>
+            <div class="cards-up">
+                <div class="cards-1">
+                  <div><img src="./img/crad_1.webp" alt=""></div>
+                  <h3>24/7 Data Collection</h3>
+                  <p>By analyzing user interactions, chat Al can help businesses identify trends and patterns, making it easier to tailor products.</p>
+                  <button class="btn-cards">Get Started</button>
+                </div>
+                <div class="cards-2">
+                  <h3>Personalization</h3>
+                  <p>This could include addressing the user by name, offering customized product recommendations, or remembering previous preferences.</p>
+                  <button class="btn-cards">Get Started</button>
+                  <div><img src="./img/card_2.webp" alt=""></div>
+                </div>
+            </div>
+            <div class="cards-down">
+              <div class="cards">
+                <img src="./img/card_3.webp" alt="">
+                <h3>More Accurate Responses</h3>
+                <p>This advantage emphasizes how chat Al can provide faster and more accurate responses to user inquiries.</p>
+                <button  class="btn-cards2">Get Started</button>
+              </div>
+            </div>
+        </section>
+
+        <section class="full-text">
+          <h1>Expenence the full power an Al content generator nat delivers premium results in seconds.</h1>
+          <button class="btn-cards">Get Started</button>
+        </section>
+
+        <section class="faq" id="faq">
+
+          <h2>Frequently Asked Questions</h2>
+          <h1>Everything you need to know about the product and billing.</h1>
+          <div class="faq-item">
+            <h3 class="faq-title">What can the AI chatbot do?</h3>
+            <p class="faq-description" style="display: none;">
+              The AI chatbot can answer your questions, provide recommendations, and assist with various tasks.
+            </p>
           </div>
-        </div>
-        
-        <div id="error-container" class="error-container hidden">
-          <p>An error occurred. Please try again.</p>
-          <pre id="error-details"></pre>
-        </div>
-        
-        <div class="chat-input-container">
-          <form id="chat-form">
-            <div class="image-preview-container" id="image-preview-container">
-              <!-- Image previews will be inserted here -->
+       
+          <div class="faq-item">
+            <h3 class="faq-title">How do I get started?</h3>
+            <p class="faq-description" style="display: none;">
+              Simply click "Get Started" to begin your conversation with the AI chatbot.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3 class="faq-title">Is it available 24/7?</h3>
+            <p class="faq-description" style="display: none;">
+              Yes, the AI chatbot is available 24/7 to assist you.
+            </p>
+          </div>
+        </section>
+        <section class="app-ft">
+          <div class="app-card">
+            <div class="crad-appg">
+              <h2>The Future is Now, Old Man</h2>
+              <p>Write 10x faster, engage your audience, & never struggle with the blank page again.</p>
+              <button  class="btn-cards3">Get Started Free</button>
             </div>
-            <div class="input-row">
-              <label for="image-upload" class="image-upload-label" title="Upload image">
-                <i data-lucide="image"></i>
-                <span class="sr-only">Upload image</span>
-              </label>
-              <input 
-                type="file" 
-                id="image-upload" 
-                accept="image/*" 
-                class="hidden"
-              >
-              <input 
-                type="text" 
-                id="chat-input" 
-                placeholder="Kteb message dyalek hna..." 
-                autocomplete="off"
-              >
-              <button type="submit" id="send-button">
-                <i data-lucide="send"></i>
-                <span class="sr-only">Send</span>
-              </button>
-            </div>
-          </form>
+            <img src="./img/footer.webp" alt="">
+          </div>
+          </div>
+        </section>
+        <script>
+          const menuToggle=document.getElementById("menu-toggle")
+          const navLinks=document.getElementById("nav-links")
+
+          function toggleMenu(){
+            navLinks.classList.toggle("active")
+          }
+          if(menuToggle){
+    menuToggle.addEventListener("click",toggleMenu)
+  }
+          const faqTitles = document.querySelectorAll('.faq-title');
+          faqTitles.forEach(title => {
+            title.addEventListener('click', () => {
+              const description = title.nextElementSibling;
+              const isVisible = description.style.display === 'block';
+              description.style.display = isVisible ? 'none' : 'block';
+              title.classList.toggle('act', !isVisible);
+            });
+          });
+        </script>
+
+    </main>
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section about">
+          <h3>About Us</h3>
+          <p>We are dedicated to providing innovative AI solutions that transform your workflows and deliver premium results.</p>
+        </div>
+        <div class="footer-section links">
+          <h3>Quick Links</h3>
+          <p><a href="index.html">Home</a></p>
+          <p><a href="#features">Features</a></p>
+          <p><a href="#faq">FAQ</a></p>
+          <p><a href="#contact">Contact</a></p>
+        </div>
+        <div class="footer-section contact">
+          <h3>Contact</h3>
+          <p>Email: support@SpakAI.com</p>
+          <p>Phone: +1 234 567 890</p>
+        </div>
+        <div class="footer-section social">
+          <h3>Follow Us</h3>
+          <div class="social-icons">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
-  
-  <script src="script.js"></script>
+      <div class="footer-bottom">
+        &copy; 2025 SpakAI. All rights reserved.
+      </div>
+    </footer>
 </body>
 </html>
