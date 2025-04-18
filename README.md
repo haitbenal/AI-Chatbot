@@ -1,12 +1,12 @@
 # 🌍 Multilingual AI Chat Assistant
 
 An AI-powered chatbot built with **Node.js**, **Express**, and **Google's Gemini Pro API**.  
-It supports **Moroccan Darija (Latin script)**, **French**, and **Modern Standard Arabic (MSA)**, allowing text and image inputs.  
+It supports **Moroccan Darija**, **French**, and **Modern Standard Arabic (MSA)**, allowing text and image inputs.  
 Users can chat, upload images, and interact with the assistant in their preferred language.
 
 ## ✨ Features
 
-- 🔄 Dynamic language support: Darija (Latin), French, and MSA
+- 🔄 Dynamic language support: Darija (Moroccan), French, and Arabic
 - 🖼️ Upload and preview image inputs
 - 💬 Message history saved in `localStorage`
 - ⚡ Fast and responsive UI
