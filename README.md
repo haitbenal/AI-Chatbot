@@ -1,3 +1,5 @@
+
+
 # 🌍 Multilingual AI Chat Assistant
 
 An AI-powered chatbot built with **Node.js**, **Express**, and **Google's Gemini Pro API**.  
@@ -37,7 +39,7 @@ project-root/
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/hichameait/AI-Chatbot.git
+git clone https://github.com/haitbenal/AI-Chatbot.git
 cd AI-Chatbot
 ```
 
