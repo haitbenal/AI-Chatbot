@@ -7,20 +7,46 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-if (!process.env.GOOGLE_API_KEY) {
-    console.error('ERROR: GOOGLE_API_KEY is not set in .env file');
-    process.exit(1);
+const apiKey = process.env.GOOGLE_API_KEY;
+const isPlaceholderKey = !apiKey || apiKey === 'your_gemini_api_key_here' || apiKey === 'YOUR APIKEY' || apiKey.includes('YOUR_API_KEY');
+
+if (!apiKey) {
+    console.warn('WARNING: GOOGLE_API_KEY is not set in .env file. Please configure a valid Gemini API key.');
+} else if (isPlaceholderKey) {
+    console.warn('WARNING: GOOGLE_API_KEY appears to be a placeholder. Please update it with your real key in .env file.');
 }
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+const genAI = new GoogleGenerativeAI(apiKey || '');
 
 app.post('/api/chat', async (req, res) => {
     try {
-        const { messages, language = 'darija' } = req.body;
+        if (!apiKey || isPlaceholderKey) {
+            return res.status(400).json({
+                error: 'API key not configured',
+                details: 'GOOGLE_API_KEY is missing or is still a placeholder. Please configure a valid Gemini API key in your .env file.',
+            });
+        }
+
+        const { messages, language = 'darija' } = req.body || {};
+
+        if (!messages || !Array.isArray(messages) || messages.length === 0) {
+            return res.status(400).json({
+                error: 'Bad Request',
+                details: 'The "messages" array is required and cannot be empty.',
+            });
+        }
+
+        const lastUserMessage = messages[messages.length - 1];
+        if (!lastUserMessage || (!lastUserMessage.content && !lastUserMessage.image)) {
+            return res.status(400).json({
+                error: 'Bad Request',
+                details: 'Last message must contain text or an image.',
+            });
+        }
         
         let systemPrompt = '';
         
@@ -59,14 +85,19 @@ app.post('/api/chat', async (req, res) => {
             `;
         }
         
-        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
-        const lastUserMessage = messages[messages.length - 1];
+        const modelName = process.env.GEMINI_MODEL || 'gemini-1.5-pro';
+        const model = genAI.getGenerativeModel({ model: modelName });
         const history = [];
         
         for (let i = 0; i < messages.length - 1; i++) {
             const msg = messages[i];
+            const role = msg.role === 'user' ? 'user' : 'model';
             
-            if (msg.image) {
+            if (msg.image && msg.image.data && msg.image.type) {
+                const base64Data = msg.image.data.includes(',')
+                    ? msg.image.data.split(',')[1]
+                    : msg.image.data;
+
                 const imageParts = [
                     {
                         text: msg.content || ''
@@ -74,18 +105,18 @@ app.post('/api/chat', async (req, res) => {
                     {
                         inlineData: {
                             mimeType: msg.image.type,
-                            data: msg.image.data.split(',')[1]
+                            data: base64Data
                         }
                     }
                 ];
                 
                 history.push({
-                    role: msg.role === 'user' ? 'user' : 'model',
+                    role,
                     parts: imageParts
                 });
-            } else {
+            } else if (msg.content) {
                 history.push({
-                    role: msg.role === 'user' ? 'user' : 'model',
+                    role,
                     parts: [{ text: msg.content }]
                 });
             }
@@ -102,21 +133,25 @@ app.post('/api/chat', async (req, res) => {
         
         let userMessageParts = [];
         
-        if (lastUserMessage.image) {
+        if (lastUserMessage.image && lastUserMessage.image.data && lastUserMessage.image.type) {
             if (lastUserMessage.content) {
                 userMessageParts.push({ text: lastUserMessage.content });
             }
             
+            const base64Data = lastUserMessage.image.data.includes(',')
+                ? lastUserMessage.image.data.split(',')[1]
+                : lastUserMessage.image.data;
+
             userMessageParts.push({
                 inlineData: {
                     mimeType: lastUserMessage.image.type,
-                    data: lastUserMessage.image.data.split(',')[1]
+                    data: base64Data
                 }
             });
         }
         
         if (userMessageParts.length === 0) {
-            userMessageParts.push({ text: `${systemPrompt}\n\nUser: ${lastUserMessage.content}` });
+            userMessageParts.push({ text: `${systemPrompt}\n\nUser: ${lastUserMessage.content || ''}` });
         } else {
             if (userMessageParts[0].text) {
                 userMessageParts[0].text = `${systemPrompt}\n\nUser: ${userMessageParts[0].text}`;

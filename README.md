@@ -17,17 +17,20 @@ Users can chat, upload images, and interact with the assistant in their preferre
 ## 📁 Folder Structure
 
 ```
-project-root/
+AI-Chatbot/
 ├── public/              # Frontend assets (HTML, CSS, JS, images)
 │   ├── index.html
 │   ├── chat.html
 │   ├── css/ 
 │   │   ├── app.css
-│   │   └──  chat.css
-│   ├── js/ 
-│   └── script.js
-├── .env                 # API key and configuration
-├── app.js            # Express server
+│   │   └── chat.css
+│   ├── img/
+│   └── js/ 
+│       └── script.js
+├── .env.example         # Example environment template
+├── .env                 # API key and configuration (git-ignored)
+├── .gitignore           # Git ignore file
+├── app.js               # Express server
 ├── package.json
 └── README.md
 ```
@@ -37,7 +40,7 @@ project-root/
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/hichameait/AI-Chatbot.git
+git clone https://github.com/haitbenal/AI-Chatbot.git
 cd AI-Chatbot
 ```
 
@@ -49,10 +52,17 @@ npm install
 
 ### 3. Set Up Environment Variables
 
-Create a `.env` file in the root and add your Gemini Pro API key:
+Copy the `.env.example` file to create your `.env` file:
 
+```bash
+cp .env.example .env
 ```
+
+Open `.env` and add your Gemini API key:
+
+```env
 GOOGLE_API_KEY=your_google_api_key_here
+PORT=3000
 ```
 
 ### 4. Run the Server

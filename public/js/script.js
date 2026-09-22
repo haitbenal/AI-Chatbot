@@ -101,8 +101,65 @@ document.addEventListener('DOMContentLoaded', () => {
     imageUpload.value = '';
   }
 
+  function renderMessage(msg) {
+    if (welcomeMessage && welcomeMessage.parentNode === chatMessages) {
+      chatMessages.removeChild(welcomeMessage);
+    }
+    const messageEl = document.createElement('div');
+    messageEl.className = `message ${msg.role}`;
+    if (msg.id) {
+      messageEl.setAttribute('data-message-id', msg.id);
+    }
+
+    if (msg.role === 'assistant') {
+      const avatarEl = document.createElement('div');
+      avatarEl.className = 'avatar';
+      const avatarFallback = document.createElement('div');
+      avatarFallback.className = 'avatar-fallback';
+      avatarFallback.textContent = '🤖';
+      avatarEl.appendChild(avatarFallback);
+      messageEl.appendChild(avatarEl);
+    }
+
+    const contentEl = document.createElement('div');
+    contentEl.className = 'message-content';
+    if (msg.content) {
+      contentEl.textContent = msg.content;
+    }
+    if (msg.image) {
+      const imageEl = document.createElement('img');
+      imageEl.className = 'message-image';
+      imageEl.src = msg.image.data;
+      imageEl.alt = msg.image.name || 'Uploaded image';
+      contentEl.appendChild(imageEl);
+    }
+    messageEl.appendChild(contentEl);
+
+    if (msg.role === 'user') {
+      const avatarEl = document.createElement('div');
+      avatarEl.className = 'avatar';
+      const avatarImg = document.createElement('img');
+      avatarImg.className = 'avatar-img';
+      avatarImg.src = './img/me.png';
+      avatarImg.alt = 'User';
+      avatarImg.onerror = function() {
+        this.onerror = null;
+        this.style.display = 'none';
+        const avatarFallback = document.createElement('div');
+        avatarFallback.className = 'avatar-fallback';
+        avatarFallback.textContent = '👤';
+        avatarEl.appendChild(avatarFallback);
+      };
+      avatarEl.appendChild(avatarImg);
+      messageEl.appendChild(avatarEl);
+    }
+
+    chatMessages.appendChild(messageEl);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
   function addMessage(role, content, image = null) {
-    const messageId = Date.now().toString();
+    const messageId = Date.now().toString() + '-' + Math.random().toString(36).substr(2, 5);
     const message = { 
       id: messageId, 
       role, 
@@ -112,62 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     messages.push(message);
     saveMessages();
-    if (welcomeMessage && welcomeMessage.parentNode === chatMessages) {
-      chatMessages.removeChild(welcomeMessage);
-    }
-    const messageEl = document.createElement('div');
-    messageEl.className = `message ${role}`;
-    if (role === 'assistant') {
-      const avatarEl = document.createElement('div');
-      avatarEl.className = 'avatar';
-      const avatarFallback = document.createElement('div');
-      avatarFallback.className = 'avatar-fallback';
-      avatarFallback.textContent = '🤖';
-      avatarEl.appendChild(avatarFallback);
-      messageEl.appendChild(avatarEl);
-    }
-    const contentEl = document.createElement('div');
-    contentEl.className = 'message-content';
-    if (content) {
-      contentEl.textContent = content;
-    }
-    if (image) {
-      const imageEl = document.createElement('img');
-      imageEl.className = 'message-image';
-      imageEl.src = image.data;
-      imageEl.alt = image.name || 'Uploaded image';
-      contentEl.appendChild(imageEl);
-    }
-    messageEl.appendChild(contentEl);
-    if (role === 'user') {
-      const avatarEl = document.createElement('div');
-      avatarEl.className = 'avatar';
-      try {
-        const avatarImg = document.createElement('img');
-        avatarImg.className = 'avatar-img';
-        avatarImg.src = './img/user.png';
-        avatarImg.alt = 'User';
-        avatarImg.onerror = function() {
-          this.onerror = null;
-          avatarEl.removeChild(this);
-          const avatarFallback = document.createElement('img');
-          avatarFallback.className = 'avatar-fallback';
-          avatarFallback.src = './img/me.png';
-          avatarFallback.alt = 'User';
-          avatarEl.appendChild(avatarFallback);
-        };
-        avatarEl.appendChild(avatarImg);
-      } catch (e) {
-        const avatarFallback = document.createElement('img');
-        avatarFallback.className = 'avatar-fallback';
-        avatarFallback.src = './img/me.png';
-        avatarFallback.alt = 'User';
-        avatarEl.appendChild(avatarFallback);
-      }
-      messageEl.appendChild(avatarEl);
-    }
-    chatMessages.appendChild(messageEl);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    renderMessage(message);
     updateChatHistory();
   }
 
@@ -295,14 +297,20 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadMessages() {
     const savedMessages = localStorage.getItem('darijaChat');
     if (savedMessages) {
-      messages = JSON.parse(savedMessages);
-      if (messages.length > 0) {
-        if (welcomeMessage && welcomeMessage.parentNode === chatMessages) {
-          chatMessages.removeChild(welcomeMessage);
+      try {
+        const parsed = JSON.parse(savedMessages);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          messages = parsed;
+          if (welcomeMessage && welcomeMessage.parentNode === chatMessages) {
+            chatMessages.removeChild(welcomeMessage);
+          }
+          messages.forEach(msg => {
+            renderMessage(msg);
+          });
+          updateChatHistory();
         }
-        messages.forEach(msg => {
-          addMessage(msg.role, msg.content, msg.image);
-        });
+      } catch (e) {
+        console.error('Failed to parse saved messages:', e);
       }
     }
   }
@@ -312,7 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
       messages = [];
       localStorage.removeItem('darijaChat');
       chatMessages.innerHTML = '';
-      chatMessages.appendChild(welcomeMessage);
+      if (welcomeMessage) {
+        chatMessages.appendChild(welcomeMessage);
+      }
       if (chatHistoryMessages) {
         chatHistoryMessages.innerHTML = '';
       }
